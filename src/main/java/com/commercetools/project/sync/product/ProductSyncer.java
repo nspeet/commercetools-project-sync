@@ -265,6 +265,8 @@ public final class ProductSyncer
   protected ProductQuery getQuery() {
     // TODO: Eventually don't expand all references and cache references for replacement.
     // https://github.com/commercetools/commercetools-project-sync/issues/49
+    final String queryPredicateStr = "masterData(current(name(en in (\"foo\", \"bar\"))))";
+    final QueryPredicate<Product> queryPredicate = QueryPredicate.of(queryPredicateStr);
     return ProductQuery.of()
         .withExpansionPaths(ProductExpansionModel::productType)
         .plusExpansionPaths(ProductExpansionModel::taxCategory)
@@ -278,7 +280,8 @@ public final class ProductSyncer
         .plusExpansionPaths(
             ExpansionPath.of("masterData.staged.masterVariant.assets[*].custom.type"))
         .plusExpansionPaths(
-            ExpansionPath.of("masterData.staged.variants[*].assets[*].custom.type"));
+            ExpansionPath.of("masterData.staged.variants[*].assets[*].custom.type"))
+        .plusPredicates(queryPredicate);
   }
 
   /**
